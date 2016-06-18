@@ -7,6 +7,7 @@ local mahTarget = 900
 local mahAlertPerc = 10
 
 -- OpenTX 2.0 - Percent Unit = 8 // OpenTx 2.1 - Percent Unit = 13
+-- see: https://opentx.gitbooks.io/opentx-lua-reference-guide/content/general/playNumber.html
 local percentUnit = 13
 
 local lastMahAlert = 0
