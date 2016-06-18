@@ -6,6 +6,9 @@ local blnMenuMode = 0
 local mahTarget = 900
 local mahAlertPerc = 10
 
+-- OpenTX 2.0 - Percent Unit = 8 // OpenTx 2.1 - Percent Unit = 13
+local percentUnit = 13
+
 local lastMahAlert = 0
 
 
@@ -33,7 +36,7 @@ end
 
 --MahAlert and Logging of last Value Played
 local function playMahPerc(percVal)
-  playNumber(percVal,8)
+  playNumber(percVal,percentUnit)
   lastMahAlert = percVal  -- Set our lastMahAlert
 end
 
