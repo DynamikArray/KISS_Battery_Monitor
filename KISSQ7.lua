@@ -16,6 +16,8 @@ local lastMahAlert = 0
 
 -- Fixes mahAlert not appearing after battery disconnect
 local lastKnownMah = 0
+local swHaptic --default for "Switch C", adjust as necessary (used in line 82)
+local swHVal = 600 --default value for Haptic Logical Switch to engage, alter as necessary (0 to 1000)
 
 local minV = 100.0
 
@@ -43,12 +45,22 @@ end
 
 --MahAlert and Logging of last Value Played
 local function playMahPerc(percVal)
-  playNumber(percVal,percentUnit)
+	if swHaptic < swHVal then
+		playHaptic(100,100,PLAY_BACKGROUND)
+	else
+		playNumber(percVal,percentUnit)
+	end
   lastMahAlert = percVal  -- Set our lastMahAlert
 end
 
 local function playCritical(percVal)
-  playFile("batcrit.wav")
+	if swHaptic < swHVal then
+		for i = 1,7 do
+			playHaptic(30,30,PLAY_BACKGROUND)
+		end
+	else
+		playFile("batcrit.wav")
+	end
   lastMahAlert = percVal  -- Set our lastMahAlert
 end
 
@@ -60,13 +72,14 @@ local function playAlerts()
 
     percVal = 0
     curMah = getValue(data.fuelUsed)
+	swHaptic = getValue('sc')
 
     if curMah ~= 0 then
       percVal =  round(((curMah/mahTarget) * 100),0)
 
       if percVal ~= lastMahAlert then
         -- Alert the user we are in critical alert
-        if percVal > 100 then
+        if percVal > 100 and percVal % 2 == 0 then
           playCritical(percVal)
         elseif percVal > 90 and percVal < 100 then
           playMahPerc(percVal)
